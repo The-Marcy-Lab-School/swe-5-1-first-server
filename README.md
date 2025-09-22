@@ -94,7 +94,7 @@ When deploying, you will use the `npm start` command to start the server using t
 
 ## Part 2 — Creating API Endpoints
 
-Now it is time to write the server application! Refer to the [lecture notes](https://marcylabschool.gitbook.io/marcy-lab-school-docs/mod-8-backend/1-intro-to-express) to build your Express server application.
+Now it is time to write the server application! Refer to the [lecture notes](https://marcylabschool.gitbook.io/marcy-lab-school-docs/mod-5-backend/1-intro-to-express) to build your Express server application.
 
 Start by creating a `GET /api/picture` endpoint that responds with the URL of a picture of your choosing (use a URL from the internet!)
 - Response Structure: `{ src: "" }`
