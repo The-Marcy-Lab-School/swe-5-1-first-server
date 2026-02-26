@@ -1,19 +1,14 @@
 {
-  "name": "swe-8-1-first-server",
+  "name": "swe-5-1-first-server",
   "version": "1.0.0",
-  "description": "Deployment Link:",
-  "main": "index.js",
+  "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^5.1.0"
-  },
   "devDependencies": {
     "nodemon": "^3.1.9"
   }

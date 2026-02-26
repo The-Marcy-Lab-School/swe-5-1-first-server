@@ -1,178 +1,232 @@
 # Your First Server Application
 
-Deployment Link: <<<<<< PUT YOUR DEPLOYMENT LINK HERE >>>>>>
-
 - [Setup](#setup)
-- [Starter Code](#starter-code)
-- [Grading](#grading)
-- [Step 1 — Server Setup](#step-1--server-setup)
-- [Step 2 — Creating API Endpoints](#step-2--creating-api-endpoints)
-- [Step 3 — Add A Route Logger Middleware](#step-3--add-a-route-logger-middleware)
-- [Step 4 — Serving Static Assets](#step-4--serving-static-assets)
-- [Step 5 — Deploy](#step-5--deploy)
+- [Short Response Questions](#short-response-questions)
+- [From Scratch](#from-scratch)
+  - [Starter Code](#starter-code)
+  - [Grading](#grading)
+  - [Step 1 — Create the Server](#step-1--create-the-server)
+  - [Step 2 — Add Routes](#step-2--add-routes)
+    - [`GET /`](#get-)
+    - [`GET /api/joke`](#get-apijoke)
+    - [`GET /api/rollDie`](#get-apirolldie)
+    - [Fallback — All Other Routes](#fallback--all-other-routes)
+  - [Step 3 — Log Every Request](#step-3--log-every-request)
+  - [Step 4 — Test with `curl`](#step-4--test-with-curl)
+    - [Test each route](#test-each-route)
+    - [View response headers](#view-response-headers)
 
 ## Setup
 
-For guidance on setting up and submitting this assignment, refer to the Marcy lab School Docs How-To guide for [Working with Short Response and Coding Assignments](https://marcylabschool.gitbook.io/marcy-lab-school-docs/fullstack-curriculum/how-tos/working-with-assignments#how-to-work-on-assignments).
+For guidance on setting up and submitting this assignment, refer to the Marcy Lab School Docs How-To guide for [Working with Short Response and Coding Assignments](https://marcylabschool.gitbook.io/marcy-lab-school-docs/fullstack-curriculum/how-tos/working-with-assignments#how-to-work-on-assignments).
 
-After cloning your repository, make sure to run the following commands:
+After cloning your repository, make sure to run:
 
 ```sh
 git checkout -b draft
 ```
 
-## Starter Code
+**No `npm install` is required.** The `node:http` module used in this assignment is built into Node — you don't need to install anything to use it.
 
-You will be given a blank repo for this one! You are building a server from scratch and will go through all the steps to set up a new Express project.
+> **Optional:** If you want your server to restart automatically when you save changes, you can install `nodemon`:
+> ```sh
+> npm install --save-dev nodemon
+> npx nodemon server.js
+> ```
 
-## Grading
+
+
+## Short Response Questions
+
+Short response questions can be found in the `short-response.md` file. Write your responses directly in that file. Do not forget to complete this part of the assignment. There are three questions covering the topics:
+
+1. Server Basics
+2. req and res
+3. Routing
+
+## From Scratch
+
+### Starter Code
+
+You will be given a blank repo for this one! You are building a server from scratch using Node's built-in `node:http` module — no npm packages required.
+
+### Grading
 
 Instead of automated tests, your grade on this assignment will be determined by the number of tasks you are able to complete. Tasks appear as a checkbox, like this:
 
 - [ ] example of an incomplete task
-- [x] example of an completed task
+- [x] example of a completed task
 
 Feel free to mark these tasks as complete/incomplete as you go. Your instructor may modify your tasks as complete/incomplete when grading.
 
-This assignment has 19 requirements:
-- 6 server setup requirements
-- 9 server API requirements
-- 3 static asset requirements
-- 1 deployment task
-
-You got this!
+This assignment has 11 requirements:
+- 4 server setup requirements
+- 2 request logging requirements
+- 5 routing requirements
 
 **Server Setup Requirements**
 
-- [ ] The root of the repository has a `server` folder with an `index.js` file and a `package.json` file inside (you will need to create this folder and these files!)
-- [ ] `package.json` has `express` installed as a dependency
-- [ ] `package.json` has `nodemon` as a dev dependency (use the `-D` flag when installing)
-- [ ] `package.json` has a `"start"` script that uses `node` to run the `index.js` file and a `"dev"` script that uses `nodemon` to run `index.js`.
-- [ ] In `index.js`, the `express()` function is used to create an `app`
-- [ ] The `app` listens on an available port (I recommend `8080`)
+- [ ] A `server.js` file exists at the root of the repository
+- [ ] `server.js` uses `require('node:http')` — no npm packages
+- [ ] `http.createServer()` is used to create the server
+- [ ] The server listens on port `8080`
 
-**Server API Requirements**
+**Request Logging Requirements**
 
-- [ ] A `logRoutes` middleware controller prints the request method, url, and time of request for every request sent to the server, and then invokes the `next()` middleware in the chain.
-- [ ] The server has a `GET /api/joke` endpoint that responds with a joke of your choosing!
-- [ ] The server has a `GET /api/picture` endpoint that responds with the URL of a picture of your choosing (use a URL from the internet!)
-- [ ] The server has a `GET /api/rollDie` endpoint that responds with an array containing a random dice roll.
-- [ ] The `GET /api/rollDie` endpoint uses a `?quantity=` query parameter to specif the number of die rolls to be added to the `rolls` array.
+- [ ] Every incoming request logs the HTTP method, URL, and timestamp to the console
+- [ ] After logging, the server continues to process and respond to the request
 
-**Static Assets Requirements**
+**Routing Requirements**
 
-- [ ] The root of the repository contains a Vite + React application. The folder containing the project is a sibling of `server`
-- [ ] The `path` module and `__dirname` are used to generate an absolute path to the `dist/` folder of your React application
-- [ ] The `express.static()` middleware serves the static assets in the React application's `dist/` folder.
+- [ ] `GET /` responds with status `200` and a plain-text welcome message
+- [ ] `GET /api/joke` responds with status `200` and a JSON object containing `setup` and `punchline` fields
+- [ ] `GET /api/rollDie` responds with status `200` and a JSON object containing a `rolls` array with a random die roll (e.g. `{ rolls: [5] }`)
+- [ ] `GET /api/rollDie` uses a `?quantity=` query parameter to roll multiple dice (defaults to 1 if missing or invalid)
+- [ ] All unmatched routes respond with status `404` and a JSON error object
 
-**Deployment Technical Requirements**
+---
 
-- [ ] The project is deployed using Render and the link is listed at the top of this README.
+### Step 1 — Create the Server
 
-## Step 1 — Server Setup
+> ✅ You will know that you've completed this step when you can run `node server.js` and see `Server listening on http://localhost:8080` printed in your terminal.
 
-> ✅ You will know that you've completed this step when you can run `npm run dev` and `npm run start` to execute your `index.js` file.
+Create a `server.js` file at the root of your repository.
 
-**Create your files:**
-* Create a `server` folder and `cd` into it.
-* Run `npm init -Y` to create a `package.json` file.
-* Create an `index.js` file in the `server` folder.
+Inside it, use Node's built-in `node:http` module to create a server and start listening on port `8080`. You do not need to install anything — `node:http` is part of Node itself.
 
-**Configure package.json**
-* Run `npm i express` to install express
-* Run `npm i -D nodemon` to install Nodemon as a dev dependency
-* Modify the `package.json` file with the following `"scripts"`:
+```js
+const http = require('node:http');
 
-```json
-"scripts": {
-  "dev": "nodemon index.js",
-  "start": "node index.js"
-},
+const server = http.createServer((req, res) => {
+  // All request handling goes here
+});
+
+server.listen(8080, () => {
+  console.log('Server listening on http://localhost:8080');
+});
 ```
 
-While working on your server, use `npm run dev` to run the server and have it restart whenever you make changes.
+`http.createServer()` accepts a **request listener** — a callback that is invoked once for every incoming request, regardless of the URL or method. Every piece of logic you write for handling requests will live inside this callback.
 
-When deploying, you will use the `npm start` command to start the server using the normal `node` command.
+Once your server is running, try visiting `http://localhost:8080` in your browser. The browser will hang waiting for a response — that's expected! You haven't told the server how to respond yet. That's next.
 
-## Step 2 — Creating API Endpoints
+---
 
-> ✅ You will know that you've completed this step when you can run your server at [http://localhost:8080](http://localhost:8080) and send requests to each of your endpoints (e.g. [http://localhost:8080/api/joke](http://localhost:8080/api/joke)).
+### Step 2 — Add Routes
 
-Now it is time to write the server application! Refer to the [lecture notes](https://marcylabschool.gitbook.io/marcy-lab-school-docs/mod-5-backend/1-intro-to-express) to build your Express server application.
+> ✅ You will know that you've completed this step when you can visit each endpoint in your browser and receive the correct response.
 
-In total, your application will have 3 endpoints:
+With `node:http`, **routing** means inspecting `req.method` and `req.url` inside the request listener and using `if/else` statements to decide how to respond.
 
-1. Create a `GET /api/picture` endpoint that responds with the URL of a picture of your choosing (use a URL from the internet!)
-    - Request URL: [http://localhost:8080/api/picture](http://localhost:8080/api/picture)
-    - Response Structure: `{ src: "" }`
-    - Example Response: `{ src: "https://static-cdn.jtvnw.net/jtv_user_pictures/meowntain-profile_banner-71b7a6d0d943dc9e-480.jpeg" }`
+Two key methods on `res` send the response back:
+- **`res.writeHead(statusCode, headers)`** — sets the HTTP status code and response headers
+- **`res.end(body)`** — sends the response body (must be a string) and closes the connection
 
-2. Create a `GET /api/joke` endpoint that responds with a joke of your choosing!
-    - Request URL: [http://localhost:8080/api/joke](http://localhost:8080/api/joke)
-    - Response Structure: `{ setup: "", punchline: ""}`
-    - Example Response: `{ setup: "what do you call a pile of kittens?", punchline: "a meowntain" }`
+> **Important:** Always use `return` after `res.end()` so that no other code in the callback runs after the response has been sent.
 
-3. Create a `GET /api/rollDie` endpoint. It should be able to handle a `?quantity=` query parameter that lets the client specify the number of dice to roll. If no value is provided, or an invalid value is provided, roll one die.
-    - Request URL: [http://localhost:8080/api/rollDie](http://localhost:8080/api/rollDie)
-    - Response Structure: `{ rolls: [] }`
-    - Example Responses
-      - With a query parameter `/api/rollDie?quantity=3`: `{ rolls: [5, 2, 3] }`
-      - No query parameter `/api/rollDie`: `{ rolls: [4] }`
-      - Invalid query parameter `/api/rollDie?quantity=foo` : `{ rolls: [2] }`
+Your server needs to handle three routes plus a fallback:
 
-As you build your server, visit [http://localhost:8080](http://localhost:8080) (or whatever port number you chose) and test out your server's API endpoints!
+#### `GET /`
+- Status: `200`
+- Content-Type: `text/plain`
+- Body: A welcome message of your choosing
 
-## Step 3 — Add A Route Logger Middleware
+#### `GET /api/joke`
+- Status: `200`
+- Content-Type: `application/json`
+- Body: `{ "setup": "...", "punchline": "..." }` with a joke of your choice
 
-> ✅ You will know that you've completed this step when information about every request that your server receives is printed to the console of your server's terminal.
+#### `GET /api/rollDie`
+- Status: `200`
+- Content-Type: `application/json`
+- Body: `{ "rolls": [...] }` — an array of random integers between 1 and 6
 
-In addition to the three GET endpoints, the server should have a `logRoutes` middleware that prints out information about every incoming request, regardless of the endpoint used.
+This endpoint should read a `?quantity=` query parameter to determine how many dice to roll. If the parameter is missing or not a valid positive number, default to rolling **one die**.
 
-It should invoke `next()` to pass the request to the next controller in the chain.
+To parse the query string from `req.url`, use the built-in `URL` constructor:
 
-Feel free to use the logger in the lecture notes!
+```js
+const { pathname, searchParams } = new URL(req.url, 'http://localhost:8080');
+const quantity = parseInt(searchParams.get('quantity'));
+```
 
-Restart your server and send requests to each of your API endpoints. Keep an eye on your terminal and see the requests being logged!
+Example responses:
+- `/api/rollDie` → `{ "rolls": [4] }`
+- `/api/rollDie?quantity=3` → `{ "rolls": [5, 2, 3] }`
+- `/api/rollDie?quantity=foo` → `{ "rolls": [1] }`
 
-## Step 4 — Serving Static Assets
+#### Fallback — All Other Routes
+- Status: `404`
+- Content-Type: `application/json`
+- Body: `{ "error": "Not found" }`
 
-> ✅ You will know that you've completed this step when you visit your server at [http://localhost:8080](http://localhost:8080) and you are presented with a frontend webpage.
+---
 
-Now that your server has API endpoints, let's create a website to show users how to use your API!
+### Step 3 — Log Every Request
 
-1. `cd` to the root of your repository.
-2. Run `npm create vite` to create a React+JavaScript application. This folder should be a sibling to `server`.
-3. Remove the provided starter code and replace the `App` will the following (feel free to modify it):
+> ✅ You will know that you've completed this step when every request you send prints a line to the server terminal showing the method, URL, and timestamp.
 
-    ```js
-    function App() {
+At the top of the `http.createServer()` callback — before any routing logic — add a `console.log` that prints the HTTP method, URL, and current timestamp for every incoming request.
 
-      return (
-        <>
-          <main>
-            <h1>My First API</h1>
-            <p>Welcome to my first API! This is a simple API that returns a random joke, can roll dice for you, and can provide you with a nice picture. Enjoy!</p>
-            <ul>
-              <li>Visit <a href="/api/joke">/api/joke</a> for a funny joke</li>
-              <li>Visit <a href="/api/picture">/api/picture</a> to see a nice picture</li>
-              <li>Visit <a href="/api/rollDie">/api/rollDie</a> to roll a die. (Try <a href="/api/rollDie?quantity=3">/api/rollDie?quantity=3</a> to roll multiple dice!)</li>
-            </ul>
-          </main>
-        </>
-      )
-    }
+Example terminal output:
 
-    export default App
-    ```
+```
+GET / 2024-01-15T10:30:00.000Z
+GET /api/joke 2024-01-15T10:30:05.123Z
+GET /api/rollDie?quantity=3 2024-01-15T10:30:10.456Z
+GET /doesnotexist 2024-01-15T10:30:15.789Z
+```
 
-4. Next, run `npm run build` to build static assets for this React application.
+> **Tip:** Use `new Date().toISOString()` to get a formatted timestamp.
 
-5. Back in the `server/index.js` file, use the `express.static()` middleware along with the `path` module and `__dirname` to serve the static assets for your frontend. See the lecture notes for guidance.
+After adding this, restart your server and send a few requests. Keep an eye on your terminal and watch the requests appear in real time!
 
-6. Test this out by running your server and visiting `http://localhost:8080`. You should see your static assets!
+---
 
-## Step 5 — Deploy
+### Step 4 — Test with `curl`
 
-> ✅ You will know that you've completed this step when you can visit your deployed server!
+> ✅ You will know that you've completed this step when you can run each `curl` command below and receive the expected response.
 
-When you're done, push your code to github and [follow these steps to deploy a static server using Render](https://marcylabschool.gitbook.io/marcy-lab-school-docs/how-tos/deploying-using-render#deploy-a-static-server-with-vite). Then, add the deployed link to the top of this README.
+With your server running, open a **second terminal tab** and use `curl` to test each of your endpoints. Unlike a browser, `curl` lets you see exactly what your server sends back — including the status code and headers.
+
+#### Test each route
+
+```sh
+# Welcome message
+curl http://localhost:8080/
+
+# Joke endpoint
+curl http://localhost:8080/api/joke
+
+# Roll one die
+curl http://localhost:8080/api/rollDie
+
+# Roll three dice
+curl "http://localhost:8080/api/rollDie?quantity=3"
+
+# Invalid quantity (should roll one die)
+curl "http://localhost:8080/api/rollDie?quantity=abc"
+
+# Unknown route (should get 404)
+curl http://localhost:8080/doesnotexist
+```
+
+#### View response headers
+
+Use the `-i` flag to see the full response — status line, headers, and body:
+
+```sh
+curl -i http://localhost:8080/api/joke
+```
+
+You should see something like:
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: ...
+
+{"setup":"...","punchline":"..."}
+```
+
+This is the raw HTTP response — the same bytes your browser receives before it does any rendering.
